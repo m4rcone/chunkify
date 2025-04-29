@@ -52,22 +52,7 @@ describe("POST /api/v1/boards/:id/columns", () => {
   });
 
   test("With invalid board 'id'", async () => {
-    const responseCreateBoard = await fetch(
-      "http://localhost:3000/api/v1/boards",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Board Name",
-        }),
-      },
-    );
-
-    expect(responseCreateBoard.status).toBe(201);
-
-    const responseCreateColumn = await fetch(
+    const response = await fetch(
       "http://localhost:3000/api/v1/boards/39cd9896-50cf-4cb2-b317-3565dd36d2c4/columns",
       {
         method: "POST",
@@ -80,6 +65,15 @@ describe("POST /api/v1/boards/:id/columns", () => {
       },
     );
 
-    expect(responseCreateColumn.status).toBe(404);
+    expect(response.status).toBe(404);
+
+    const responseBody = await response.json();
+
+    expect(responseBody).toEqual({
+      name: "NotFoundError",
+      message: "O id informado não foi encontrado no sistema.",
+      action: "Verifique o id informado e tente novamente.",
+      status_code: 404,
+    });
   });
 });
