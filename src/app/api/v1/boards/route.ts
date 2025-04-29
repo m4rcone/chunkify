@@ -5,9 +5,9 @@ import { MethodNotAllowedError } from "infra/errors";
 
 export async function GET() {
   try {
-    const boardsFounded = await boards.getAll();
+    const Found = await boards.getAll();
 
-    return NextResponse.json(boardsFounded, { status: 200 });
+    return NextResponse.json(Found, { status: 200 });
   } catch (error) {
     return controller.errorHandlerResponse(error);
   }

@@ -2,9 +2,9 @@ import database from "infra/database";
 import { NotFoundError } from "infra/errors";
 
 async function getAll() {
-  const boardsFounded = await runSelectQuery();
+  const boardsFound = await runSelectQuery();
 
-  return boardsFounded;
+  return boardsFound;
 
   async function runSelectQuery() {
     const result = await database.query({
@@ -21,8 +21,8 @@ async function getAll() {
 }
 
 async function findOneById(id: string) {
-  const boardFounded = await runSelectQuery(id);
-  return boardFounded;
+  const boardFound = await runSelectQuery(id);
+  return boardFound;
 
   async function runSelectQuery(id: string) {
     const result = await database.query({
@@ -73,7 +73,8 @@ async function create(boardInputValues: { name: string }) {
 }
 
 async function update(id: string, boardInputValues: { name: string }) {
-  const boardFounded = await findOneById(id);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const boardFound = await findOneById(id);
   const boardUpdated = await runUpdateQuery(id, boardInputValues);
 
   return boardUpdated;
