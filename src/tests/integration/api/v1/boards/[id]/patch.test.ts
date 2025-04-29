@@ -38,13 +38,14 @@ describe("PATCH /api/v1/boards/:id", () => {
     expect(responsePATCH.status).toBe(200);
 
     const responsePATCHBody = await responsePATCH.json();
+    const originalUpdatedAt = responsePOSTBody.updated_at;
 
-    expect(responsePATCHBody).toEqual({
-      id: responsePATCHBody.id,
-      name: "BoardNewName",
-      created_at: responsePATCHBody.created_at,
-      updated_at: responsePATCHBody.updated_at,
-    });
+    expect(responsePATCHBody.id).toBe(responsePOSTBody.id);
+    expect(responsePATCHBody.name).toBe("BoardNewName");
+    expect(responsePATCHBody.created_at).toBe(responsePOSTBody.created_at);
+    expect(new Date(responsePATCHBody.updated_at).getTime()).toBeGreaterThan(
+      new Date(originalUpdatedAt).getTime(),
+    );
   });
 
   test("With non-existent 'id'", async () => {

@@ -82,18 +82,19 @@ async function update(id: string, boardInputValues: { name: string }) {
     id: string,
     boardInputValues: { name: string },
   ) {
+    const updatedAt = new Date().toISOString();
     const result = await database.query({
       text: `
         UPDATE
           boards
         SET
-          name = $1
+          name = $1, updated_at = $2
         WHERE
-          id = $2
+          id = $3
         RETURNING
           *
       `,
-      values: [boardInputValues.name, id],
+      values: [boardInputValues.name, updatedAt, id],
     });
 
     return result.rows[0];
