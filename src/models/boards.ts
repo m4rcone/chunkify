@@ -1,4 +1,5 @@
 import database from "infra/database";
+import { NotFoundError } from "infra/errors";
 
 async function getAll() {
   const boardsFounded = await runSelectQuery();
@@ -21,7 +22,6 @@ async function getAll() {
 
 async function findOneById(id: string) {
   const boardFounded = await runSelectQuery(id);
-
   return boardFounded;
 
   async function runSelectQuery(id: string) {
@@ -40,7 +40,10 @@ async function findOneById(id: string) {
     });
 
     if (result.rowCount === 0) {
-      throw new Error("Board not founded");
+      throw new NotFoundError({
+        message: "O id informado não foi encontrado no sistema.",
+        action: "Verifique o id informado e tente novamente.",
+      });
     }
 
     return result.rows[0];
@@ -99,6 +102,7 @@ async function update(id: string, boardInputValues: { name: string }) {
 
 const boards = {
   getAll,
+  findOneById,
   create,
   update,
 };

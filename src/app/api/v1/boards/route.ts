@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import boards from "models/boards";
+import controller from "infra/controller";
+import { MethodNotAllowedError } from "infra/errors";
 
 export async function GET() {
   try {
@@ -7,7 +9,7 @@ export async function GET() {
 
     return NextResponse.json(boardsFounded, { status: 200 });
   } catch (error) {
-    console.log(error);
+    return controller.errorHandlerResponse(error);
   }
 }
 
@@ -18,6 +20,24 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newBoard, { status: 201 });
   } catch (error) {
-    console.log(error);
+    return controller.errorHandlerResponse(error);
   }
+}
+
+export async function PUT() {
+  const publicErrorObject = new MethodNotAllowedError();
+
+  return controller.errorHandlerResponse(publicErrorObject);
+}
+
+export async function PATCH() {
+  const publicErrorObject = new MethodNotAllowedError();
+
+  return controller.errorHandlerResponse(publicErrorObject);
+}
+
+export async function DELETE() {
+  const publicErrorObject = new MethodNotAllowedError();
+
+  return controller.errorHandlerResponse(publicErrorObject);
 }
