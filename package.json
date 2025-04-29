@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run services:up && next dev",
+    "services:up": "docker compose -f src/infra/compose.yaml up -d",
+    "services:stop": "docker compose -f src/infra/compose.yaml stop",
+    "services:down": "docker compose -f src/infra/compose.yaml down",
     "build": "next build",
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand --verbose",
@@ -18,11 +21,13 @@
   "license": "ISC",
   "dependencies": {
     "next": "^15.3.1",
+    "pg": "^8.15.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@types/node": "22.15.3",
+    "@types/pg": "^8.11.14",
     "@types/react": "19.1.2",
     "eslint": "9.25.1",
     "eslint-config-next": "15.3.1",
