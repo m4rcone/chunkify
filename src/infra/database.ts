@@ -1,6 +1,11 @@
 import { Client } from "pg";
 
-async function query(queryObject: string) {
+type QueryObject = {
+  text: string;
+  values?: string[];
+};
+
+async function query(queryObject: QueryObject | string) {
   let client: Client | undefined;
 
   try {
