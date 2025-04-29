@@ -1,4 +1,5 @@
 import controller from "infra/controller";
+import { MethodNotAllowedError } from "infra/errors";
 import boards from "models/boards";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,4 +30,30 @@ export async function PATCH(
   } catch (error) {
     return controller.errorHandlerResponse(error);
   }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    await boards.deleteBoard(id);
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    return controller.errorHandlerResponse(error);
+  }
+}
+
+export async function POST() {
+  const publicErrorObject = new MethodNotAllowedError();
+
+  return controller.errorHandlerResponse(publicErrorObject);
+}
+
+export async function PUT() {
+  const publicErrorObject = new MethodNotAllowedError();
+
+  return controller.errorHandlerResponse(publicErrorObject);
 }

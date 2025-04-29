@@ -73,8 +73,7 @@ async function create(boardInputValues: { name: string }) {
 }
 
 async function update(id: string, boardInputValues: { name: string }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const boardFound = await findOneById(id);
+  await findOneById(id);
   const boardUpdated = await runUpdateQuery(id, boardInputValues);
 
   return boardUpdated;
@@ -101,11 +100,36 @@ async function update(id: string, boardInputValues: { name: string }) {
   }
 }
 
+async function deleteBoard(id: string) {
+  await findOneById(id);
+  await runDeleteQuery(id);
+
+  async function runDeleteQuery(id: string) {
+    const result = await database.query({
+      text: `
+        DELETE FROM
+          boards
+        WHERE
+          id = $1
+      `,
+      values: [id],
+    });
+
+    if (result.rowCount !== 1) {
+      throw new NotFoundError({
+        message: "O id informado não foi encontrado no sistema.",
+        action: "Verifique o id informado e tente novamente.",
+      });
+    }
+  }
+}
+
 const boards = {
   getAll,
   findOneById,
   create,
   update,
+  deleteBoard,
 };
 
 export default boards;
