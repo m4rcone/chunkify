@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "Transformar em pedaços!",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "npm run services:up && next dev",
     "services:up": "docker compose -f src/infra/compose.yaml up -d",
     "services:stop": "docker compose -f src/infra/compose.yaml stop",
     "services:down": "docker compose -f src/infra/compose.yaml down",
+    "migrations:create": "node-pg-migrate --migrations-dir src/infra/migrations create",
+    "migrations:up": "node-pg-migrate --migrations-dir src/infra/migrations --envPath .env.development up",
     "build": "next build",
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand --verbose",
@@ -20,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "next": "^15.3.1",
     "pg": "^8.15.6",
     "react": "^19.1.0",
@@ -32,6 +34,7 @@
     "eslint": "9.25.1",
     "eslint-config-next": "15.3.1",
     "jest": "^29.7.0",
+    "node-pg-migrate": "^7.9.1",
     "prettier": "3.5.3",
     "typescript": "5.8.3"
   }
