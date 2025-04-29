@@ -16,3 +16,17 @@ export async function POST(
     return controller.errorHandlerResponse(error);
   }
 }
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    const columnsFound = await columns.getColumnsByBoardId(id);
+
+    return NextResponse.json(columnsFound, { status: 200 });
+  } catch (error) {
+    return controller.errorHandlerResponse(error);
+  }
+}
