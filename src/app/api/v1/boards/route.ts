@@ -3,7 +3,7 @@ import boards from "models/boards";
 
 export async function GET() {
   try {
-    const boardsFounded = await boards.getAllBoards();
+    const boardsFounded = await boards.getAll();
 
     return NextResponse.json(boardsFounded, { status: 200 });
   } catch (error) {
