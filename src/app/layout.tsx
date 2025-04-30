@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+import "./styles/globals.css";
+
+export const metadata: Metadata = {
+  title: "Chunkify",
+  description: "Transforme em pedaços!",
+};
+
 export default function RootLayout({
   children,
 }: {

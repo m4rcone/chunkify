@@ -21,11 +21,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.5",
     "dotenv": "^16.5.0",
     "next": "^15.3.1",
     "pg": "^8.15.6",
+    "postcss": "^8.5.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.5"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
