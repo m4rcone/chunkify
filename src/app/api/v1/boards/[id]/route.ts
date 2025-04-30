@@ -9,9 +9,9 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const foundBoard = await boards.findOneById(id);
+    const boardFound = await boards.findOneById(id);
 
-    return NextResponse.json(foundBoard, { status: 200 });
+    return NextResponse.json(boardFound, { status: 200 });
   } catch (error) {
     return controller.errorHandlerResponse(error);
   }

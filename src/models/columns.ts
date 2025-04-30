@@ -2,15 +2,14 @@ import database from "infra/database";
 import boards from "./boards";
 import { NotFoundError } from "infra/errors";
 
-async function create(idBoard: string, columnInputValues: { name: string }) {
-  await boards.findOneById(idBoard);
-
-  const newColumn = await runInsertQuery(idBoard, columnInputValues);
+async function create(boardId: string, columnInputValues: { name: string }) {
+  await boards.findOneById(boardId);
+  const newColumn = await runInsertQuery(boardId, columnInputValues);
 
   return newColumn;
 
   async function runInsertQuery(
-    idBoard: string,
+    boardId: string,
     columnInputValues: { name: string },
   ) {
     const result = await database.query({
@@ -22,74 +21,67 @@ async function create(idBoard: string, columnInputValues: { name: string }) {
         RETURNING
           *
       `,
-      values: [columnInputValues.name, idBoard],
+      values: [columnInputValues.name, boardId],
     });
 
     return result.rows[0];
   }
 }
 
-async function update(idColumn: string, boardInputValues: { name: string }) {
-  await findOneById(idColumn);
-  const columnUpdated = await runUpdateQuery(idColumn, boardInputValues);
+async function update(columnId: string, columnInputValues: { name: string }) {
+  const columnFound = await findOneById(columnId);
+  const columnWithNewValues = { ...columnFound, ...columnInputValues };
+  const updatedColumn = await runUpdateQuery(columnWithNewValues);
 
-  return columnUpdated;
+  return updatedColumn;
 
-  async function runUpdateQuery(
-    idColumn: string,
-    boardInputValues: { name: string },
-  ) {
-    const updatedAt = new Date().toISOString();
+  async function runUpdateQuery(columnWithNewValues: {
+    id: string;
+    name: string;
+  }) {
     const result = await database.query({
       text: `
         UPDATE
           columns
         SET
-          name = $1, updated_at = $2
+          name = $1, 
+          updated_at = timezone('UTC', now())
         WHERE
-          id = $3
+          id = $2
         RETURNING
           *
       `,
-      values: [boardInputValues.name, updatedAt, idColumn],
+      values: [columnWithNewValues.name, columnWithNewValues.id],
     });
 
     return result.rows[0];
   }
 }
 
-async function deleteColumn(idColumn: string) {
-  await findOneById(idColumn);
-  await runDeleteQuery(idColumn);
+async function deleteColumn(columnId: string) {
+  await findOneById(columnId);
+  await runDeleteQuery(columnId);
 
-  async function runDeleteQuery(idColumn: string) {
-    const result = await database.query({
+  async function runDeleteQuery(columnId: string) {
+    await database.query({
       text: `
         DELETE FROM
           columns
         WHERE
           id = $1
       `,
-      values: [idColumn],
+      values: [columnId],
     });
-
-    if (result.rowCount !== 1) {
-      throw new NotFoundError({
-        message: "O id informado não foi encontrado no sistema.",
-        action: "Verifique o id informado e tente novamente.",
-      });
-    }
   }
 }
 
-async function getColumnsByBoardId(idBoard: string) {
-  await boards.findOneById(idBoard);
-
-  const columnsFound = await runSelectQuery(idBoard);
+async function getColumnsByBoardId(boardId: string) {
+  await boards.findOneById(boardId);
+  const columnsFound = await runSelectQuery(boardId);
 
   return columnsFound;
 
-  async function runSelectQuery(idBoard: string) {
+  async function runSelectQuery(boardId: string) {
     const result = await database.query({
       text: `
         SELECT
@@ -99,7 +91,7 @@ async function getColumnsByBoardId(idBoard: string) {
         WHERE
           board_id = $1
       `,
-      values: [idBoard],
+      values: [boardId],
     });
 
     return result.rows;

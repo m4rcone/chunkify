@@ -24,9 +24,9 @@ export async function PATCH(
   try {
     const { id } = await params;
     const columnInputValues = await request.json();
-    const columnUpdated = await columns.update(id, columnInputValues);
+    const updatedColumn = await columns.update(id, columnInputValues);
 
-    return NextResponse.json(columnUpdated, { status: 200 });
+    return NextResponse.json(updatedColumn, { status: 200 });
   } catch (error) {
     return controller.errorHandlerResponse(error);
   }
