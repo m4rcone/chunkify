@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+  --color-main-purple: #635fc7;
+  --color-main-purple-hover: #a8a4ff;
+  --color-very-light-purple: #979797;
+  --color-red: #ea5555;
+  --color-red-hover: #ff9898;
+  --color-black: #000112;
+  --color-white: #ffffff;
+  --color-very-dark-gray: #20212c;
+  --color-dark-gray: #2b2c37;
+  --color-medium-gray: #828fa3;
+  --color-light-gray: #f4f7fd;
+  --color-lines-dark: #3e3f4e;
+  --color-lines-light: #e4ebfa;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));

@@ -1,3 +1,12 @@
+"use client";
+
+import { Navigation } from "./components/navigation";
+
 export default function Page() {
-  return <h1>Chunkify</h1>;
+  return (
+    <div className="bg-light-gray h-screen">
+      <Navigation />
+      <main></main>
+    </div>
+  );
 }
