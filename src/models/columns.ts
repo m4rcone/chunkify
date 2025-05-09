@@ -90,6 +90,8 @@ async function getColumnsByBoardId(boardId: string) {
           columns
         WHERE
           board_id = $1
+        ORDER BY
+          created_at
       `,
       values: [boardId],
     });

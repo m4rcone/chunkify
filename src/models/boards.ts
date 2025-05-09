@@ -82,6 +82,8 @@ async function getAll() {
           *
         FROM
           boards
+        ORDER BY
+          created_at
       `,
     });
 
