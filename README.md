@@ -125,3 +125,8 @@ E claro, colocar o app em um pedacinho da internet!
 
 ## Galeria
 
+![1](https://github.com/user-attachments/assets/825fb105-e78c-4348-879f-5da024739c2e)
+![2](https://github.com/user-attachments/assets/a6ed0481-7fa2-41ae-ac81-19d026b77957)
+![3](https://github.com/user-attachments/assets/92bba8be-237b-44dd-a9b4-4939db47cd36)
+![4](https://github.com/user-attachments/assets/7a35fe0f-2b5d-476e-8d96-d4bf1c08e5d8)
+![5](https://github.com/user-attachments/assets/4a9ce8d0-6765-41ff-ad48-b99798f59aed)
