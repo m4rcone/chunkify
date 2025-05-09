@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { ModalEditBoard } from "app/components/modals/modal-edit-board";
 import { Button } from "app/components/ui/button";
-import { useBoard, useBoardActions } from "app/hooks/boards/useBoards";
+import { useBoard, useColumns } from "app/hooks/boards/useBoards";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
@@ -12,8 +12,7 @@ export default function BoardPage() {
   const params = useParams();
   const boardId = String(params.boardId);
   const { board } = useBoard(boardId);
-  const { getColumns } = useBoardActions();
-  const { columns, isLoading, error } = getColumns(boardId);
+  const { columns, isLoading, error } = useColumns(boardId);
 
   if (isLoading) {
     return (

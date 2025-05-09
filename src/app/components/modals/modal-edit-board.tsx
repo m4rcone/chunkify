@@ -26,7 +26,7 @@ export function ModalEditBoard({
       setBoardName(board.name);
       setEditColumns(columns);
     }
-  }, [open, board.name, columns]);
+  }, [open, board?.name, columns]);
 
   const addColumn = () => {
     const newColumnId = Math.random().toString(36).substring(2, 15);
