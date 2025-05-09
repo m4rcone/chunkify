@@ -7,8 +7,11 @@ export function useTheme() {
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme");
     const isDark = storedTheme === "dark";
+
     setIsDarkMode(isDark);
+
     document.documentElement.classList.toggle("dark", isDark);
+
     setIsReady(true);
   }, []);
 
@@ -16,14 +19,16 @@ export function useTheme() {
     if (!isReady) {
       return;
     }
+
     localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
     document.documentElement.classList.toggle("dark", isDarkTheme);
-  }, [isDarkTheme]);
+  }, [isDarkTheme, isReady]);
 
   const handleToggle = () => {
     if (!isReady) {
       return;
     }
+
     setIsDarkMode((prevState) => !prevState);
   };
 
