@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { Navigation } from "./components/navigation";
 import "./styles/globals.css";
-import { BoardsProvider } from "./contexts/boards";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weight: ["400", "700"],
@@ -13,16 +13,25 @@ export const metadata: Metadata = {
   description: "Transforme em pedaços!",
 };
 
+export const viewport: Viewport = {
+  minimumScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={plusJakartaSans.className}>
-      <BoardsProvider>
-        <body>{children}</body>
-      </BoardsProvider>
+    <html lang="en" className={plusJakartaSans.className}>
+      <body>
+        <div className="bg-light-gray dark:bg-very-dark-gray flex h-screen w-screen flex-col md:flex-row">
+          <Navigation />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
