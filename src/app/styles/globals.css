@@ -17,3 +17,9 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  * {
+    @apply focus:outline-none;
+  }
+}
