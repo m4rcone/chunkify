@@ -1,6 +1,13 @@
 import database from "infra/database";
 import { NotFoundError } from "infra/errors";
 
+export type BoardObject = {
+  id: string;
+  name: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
 async function create(boardInputValues: { name: string }) {
   const newBoard = await runInsertQuery(boardInputValues);
 

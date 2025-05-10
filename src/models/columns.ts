@@ -2,6 +2,13 @@ import database from "infra/database";
 import boards from "./boards";
 import { NotFoundError } from "infra/errors";
 
+export type columnObject = {
+  id: string;
+  name: string;
+  created_at: Date;
+  updated_at: Date;
+};
+
 async function create(boardId: string, columnInputValues: { name: string }) {
   await boards.findOneById(boardId);
   const newColumn = await runInsertQuery(boardId, columnInputValues);
