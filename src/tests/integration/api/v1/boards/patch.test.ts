@@ -3,10 +3,9 @@ describe("PATCH /api/v1/boards", () => {
     const response = await fetch("http://localhost:3000/api/v1/boards", {
       method: "PATCH",
     });
+    const respondeBody = await response.json();
 
     expect(response.status).toBe(405);
-
-    const respondeBody = await response.json();
 
     expect(respondeBody).toEqual({
       name: "MethodNotAllowedError",

@@ -7,67 +7,39 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/columns/:id", () => {
   test("With existent 'id' and valid data", async () => {
-    const responseCreateBoard = await fetch(
-      "http://localhost:3000/api/v1/boards",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Board Name",
-        }),
-      },
-    );
+    const createdBoard = await orchestrator.createBoard({
+      name: "Board Name",
+    });
 
-    expect(responseCreateBoard.status).toBe(201);
+    const createdColumn = await orchestrator.createColumn(createdBoard.id, {
+      name: "Column Name",
+    });
 
-    const responseCreateBoardBody = await responseCreateBoard.json();
-    const boardId = responseCreateBoardBody.id;
-
-    const responseCreateColumn = await fetch(
-      `http://localhost:3000/api/v1/boards/${boardId}/columns`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Column Name",
-        }),
-      },
-    );
-
-    expect(responseCreateColumn.status).toBe(201);
-
-    const responseCreateColumnBody = await responseCreateColumn.json();
-    const columnId = responseCreateColumnBody.id;
-
-    const responseUpdateColumn = await fetch(
-      `http://localhost:3000/api/v1/columns/${columnId}`,
+    const response = await fetch(
+      `http://localhost:3000/api/v1/columns/${createdColumn.id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "Column Name Updated",
+          name: "New Column Name",
         }),
       },
     );
+    const responseBody = await response.json();
 
-    expect(responseUpdateColumn.status).toBe(200);
+    expect(response.status).toBe(200);
 
-    const responseUpdateColumnBody = await responseUpdateColumn.json();
+    expect(responseBody).toEqual({
+      id: createdColumn.id,
+      name: "New Column Name",
+      created_at: createdColumn.created_at.toISOString(),
+      updated_at: responseBody.updated_at,
+      board_id: createdBoard.id,
+    });
 
-    expect(responseUpdateColumnBody.id).toBe(columnId);
-    expect(responseUpdateColumnBody.name).toBe("Column Name Updated");
-    expect(responseUpdateColumnBody.created_at).toBe(
-      responseCreateColumnBody.created_at,
-    );
-    expect(
-      new Date(responseUpdateColumnBody.updated_at).getTime(),
-    ).toBeGreaterThan(new Date(responseCreateColumnBody.updated_at).getTime());
+    expect(responseBody.updated_at > responseBody.created_at).toBe(true);
   });
 
   test("With non-existent 'id'", async () => {
@@ -83,10 +55,9 @@ describe("PATCH /api/v1/columns/:id", () => {
         }),
       },
     );
+    const responseBody = await response.json();
 
     expect(response.status).toBe(404);
-
-    const responseBody = await response.json();
 
     expect(responseBody).toEqual({
       name: "NotFoundError",

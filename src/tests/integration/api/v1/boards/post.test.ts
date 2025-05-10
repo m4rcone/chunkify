@@ -13,19 +13,20 @@ describe("POST /api/v1/boards", () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: "BoardName Válido",
+        name: "Board Name",
       }),
     });
+    const responseBody = await response.json();
 
     expect(response.status).toBe(201);
 
-    const responseBody = await response.json();
     expect(responseBody).toEqual({
       id: responseBody.id,
-      name: "BoardName Válido",
+      name: "Board Name",
       created_at: responseBody.created_at,
       updated_at: responseBody.updated_at,
     });
+
     expect(Date.parse(responseBody.created_at)).not.toBeNaN();
     expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
   });

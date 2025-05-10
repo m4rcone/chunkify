@@ -7,45 +7,30 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/boards/:id", () => {
   test("With existent 'id' and valid data", async () => {
-    const responsePOST = await fetch("http://localhost:3000/api/v1/boards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: "BoardName",
-      }),
+    const createdBoard = await orchestrator.createBoard({
+      name: "Board Name",
     });
 
-    expect(responsePOST.status).toBe(201);
-
-    const responsePOSTBody = await responsePOST.json();
-    const boardId = responsePOSTBody.id;
-
-    const responsePATCH = await fetch(
-      `http://localhost:3000/api/v1/boards/${boardId}`,
+    const response = await fetch(
+      `http://localhost:3000/api/v1/boards/${createdBoard.id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "BoardNewName",
+          name: "New Board Name",
         }),
       },
     );
+    const responseBody = await response.json();
 
-    expect(responsePATCH.status).toBe(200);
+    expect(response.status).toBe(200);
 
-    const responsePATCHBody = await responsePATCH.json();
-    const originalUpdatedAt = responsePOSTBody.updated_at;
-
-    expect(responsePATCHBody.id).toBe(responsePOSTBody.id);
-    expect(responsePATCHBody.name).toBe("BoardNewName");
-    expect(responsePATCHBody.created_at).toBe(responsePOSTBody.created_at);
-    expect(new Date(responsePATCHBody.updated_at).getTime()).toBeGreaterThan(
-      new Date(originalUpdatedAt).getTime(),
-    );
+    expect(responseBody.id).toBe(createdBoard.id);
+    expect(responseBody.name).toBe("New Board Name");
+    expect(responseBody.created_at).toBe(createdBoard.created_at.toISOString());
+    expect(responseBody.updated_at > responseBody.created_at).toBe(true);
   });
 
   test("With non-existent 'id'", async () => {
@@ -57,14 +42,13 @@ describe("PATCH /api/v1/boards/:id", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "BoardNewName",
+          name: "New Board Name",
         }),
       },
     );
+    const responseBody = await response.json();
 
     expect(response.status).toBe(404);
-
-    const responseBody = await response.json();
 
     expect(responseBody).toEqual({
       name: "NotFoundError",

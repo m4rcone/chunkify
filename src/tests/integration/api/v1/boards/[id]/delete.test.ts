@@ -7,29 +7,18 @@ beforeAll(async () => {
 
 describe("DELETE /api/v1/boards/:id", () => {
   test("With existent 'id'", async () => {
-    const responsePOST = await fetch("http://localhost:3000/api/v1/boards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: "BoardName",
-      }),
+    const createdBoard = await orchestrator.createBoard({
+      name: "Board Name",
     });
 
-    expect(responsePOST.status).toBe(201);
-
-    const responsePOSTBody = await responsePOST.json();
-    const boardId = responsePOSTBody.id;
-
-    const responseDELETE = await fetch(
-      `http://localhost:3000/api/v1/boards/${boardId}`,
+    const response = await fetch(
+      `http://localhost:3000/api/v1/boards/${createdBoard.id}`,
       {
         method: "DELETE",
       },
     );
 
-    expect(responseDELETE.status).toBe(204);
+    expect(response.status).toBe(204);
 
     const responseGET = await fetch("http://localhost:3000/api/v1/boards");
     const responseGETBody = await responseGET.json();
@@ -44,10 +33,9 @@ describe("DELETE /api/v1/boards/:id", () => {
         method: "DELETE",
       },
     );
+    const responseBody = await response.json();
 
     expect(response.status).toBe(404);
-
-    const responseBody = await response.json();
 
     expect(responseBody).toEqual({
       name: "NotFoundError",

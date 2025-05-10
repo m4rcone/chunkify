@@ -7,69 +7,39 @@ beforeAll(async () => {
 
 describe("GET /api/v1/columns/:id", () => {
   test("With existent 'id'", async () => {
-    const responseCreateBoard = await fetch(
-      "http://localhost:3000/api/v1/boards",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Board Name",
-        }),
-      },
+    const createdBoard = await orchestrator.createBoard({
+      name: "Board Name",
+    });
+
+    const createdColumn = await orchestrator.createColumn(createdBoard.id, {
+      name: "Column Name",
+    });
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/columns/${createdColumn.id}`,
     );
+    const responseBody = await response.json();
 
-    expect(responseCreateBoard.status).toBe(201);
+    expect(response.status).toBe(200);
 
-    const responseCreateBoardBody = await responseCreateBoard.json();
-    const boardId = responseCreateBoardBody.id;
-
-    const responseCreateColumn = await fetch(
-      `http://localhost:3000/api/v1/boards/${boardId}/columns`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: "Column Name",
-        }),
-      },
-    );
-
-    expect(responseCreateColumn.status).toBe(201);
-
-    const responseCreateColumnBody = await responseCreateColumn.json();
-    const columnId = responseCreateColumnBody.id;
-
-    const responseGET = await fetch(
-      `http://localhost:3000/api/v1/columns/${columnId}`,
-    );
-
-    expect(responseGET.status).toBe(200);
-
-    const responseGETBody = await responseGET.json();
-
-    expect(responseGETBody).toEqual({
-      id: columnId,
-      name: responseCreateColumnBody.name,
-      created_at: responseCreateColumnBody.created_at,
-      updated_at: responseCreateColumnBody.updated_at,
-      board_id: boardId,
+    expect(responseBody).toEqual({
+      id: createdColumn.id,
+      name: createdColumn.name,
+      created_at: createdColumn.created_at.toISOString(),
+      updated_at: createdColumn.updated_at.toISOString(),
+      board_id: createdBoard.id,
     });
   });
 
   test("With non-existent 'id'", async () => {
-    const responseGET = await fetch(
+    const response = await fetch(
       "http://localhost:3000/api/v1/columns/39cd9896-50cf-4cb2-b317-3565dd36d2c4",
     );
+    const responseBody = await response.json();
 
-    expect(responseGET.status).toBe(404);
+    expect(response.status).toBe(404);
 
-    const responseGETBody = await responseGET.json();
-
-    expect(responseGETBody).toEqual({
+    expect(responseBody).toEqual({
       name: "NotFoundError",
       message: "O id informado não foi encontrado no sistema.",
       action: "Verifique o id informado e tente novamente.",
