@@ -142,7 +142,7 @@ describe("PATCH /api/v1/tasks/[id]", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "Column Name Updated",
+          title: "New Task Title",
         }),
       },
     );
