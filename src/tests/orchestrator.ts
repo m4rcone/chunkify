@@ -2,6 +2,7 @@ import database from "infra/database";
 import boards, { BoardObject } from "models/boards";
 import columns, { columnObject } from "models/columns";
 import migrator from "models/migrator";
+import subtasks, { SubtaskObject } from "models/subtasks";
 import tasks, { type TaskObject } from "models/tasks";
 
 async function clearDatabase() {
@@ -32,12 +33,20 @@ async function createTask(
   return await tasks.create(columnId, taskObject);
 }
 
+async function createSubtask(
+  taskId: string,
+  subtaskObject: SubtaskObject,
+): Promise<SubtaskObject> {
+  return await subtasks.create(taskId, subtaskObject);
+}
+
 const orchestrator = {
   clearDatabase,
   runPendingMigrations,
   createBoard,
   createColumn,
   createTask,
+  createSubtask,
 };
 
 export default orchestrator;
