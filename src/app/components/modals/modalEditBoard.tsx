@@ -1,70 +1,69 @@
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
-import { Button } from "../ui/button";
 import { useBoardActions } from "app/hooks/boards/useBoards";
-import { Column } from "app/services/boardService";
+import { Board, Column } from "app/services/boardService";
+import { Button } from "../ui/button";
+import { Ellipsis, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 
-export function ModalNewBoard({
+export function ModalEditBoard({
+  board,
+  columns,
   open,
   onOpenChange,
 }: {
+  board: Board;
+  columns: Column[];
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [boardName, setBoardName] = useState<string>("");
-  const [columns, setColumns] = useState<Column[]>([]);
-  const { handleCreateBoard } = useBoardActions();
-
-  const router = useRouter();
+  const [editColumns, setEditColumns] = useState<Column[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { handleUpdateBoard } = useBoardActions();
 
   useEffect(() => {
     if (open) {
-      setBoardName("");
-      setColumns([]);
+      setBoardName(board.name);
+      setEditColumns(columns);
     }
-  }, [open]);
+  }, [open, board?.name, columns]);
 
   const addColumn = () => {
     const newColumnId = Math.random().toString(36).substring(2, 15);
-    setColumns([...columns, { id: newColumnId, name: "" }]);
+    setEditColumns([...editColumns, { id: newColumnId, name: "" }]);
   };
 
   const removeColumn = (columnId: string) => {
-    setColumns(columns.filter((column) => column.id !== columnId));
+    setEditColumns(editColumns.filter((column) => column.id !== columnId));
   };
 
   const updateColumnName = (columnId: string, name: string) => {
-    setColumns(
-      columns.map((column) =>
+    setEditColumns(
+      editColumns.map((column) =>
         column.id === columnId ? { ...column, name } : column,
       ),
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setIsLoading(true);
 
     if (e) {
       e.preventDefault();
     }
 
-    const boardObject = { name: boardName, columns };
+    const boardObject = { id: board.id, name: boardName, columns: editColumns };
 
     try {
-      const createdBoardId = await handleCreateBoard(boardObject);
+      await handleUpdateBoard(boardObject);
       setIsLoading(false);
       onOpenChange(false);
-
-      router.push(`/boards/${createdBoardId}`);
     } catch (error) {
-      alert("🔴 Error creating board.");
+      alert("🔴 Error editing board.");
       console.error(error);
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <Dialog.Portal>
@@ -72,17 +71,17 @@ export function ModalNewBoard({
       <Dialog.Content
         onPointerDownOutside={() => onOpenChange(false)}
         onInteractOutside={() => onOpenChange(false)}
-        className="absolute top-1/2 left-1/2 z-50 -translate-x-1/2 -translate-y-1/2"
+        className="absolute top-1/2 left-1/2 z-50 max-h-svh -translate-x-1/2 -translate-y-1/2"
       >
-        <div className="dark:bg-dark-gray flex w-[343px] flex-col gap-6 rounded-md bg-white p-6 md:w-[480px] md:p-8 dark:text-white">
+        <div className="scrollbar-custom dark:bg-dark-gray flex max-h-svh w-[343px] flex-col gap-6 overflow-y-auto rounded-md bg-white p-6 md:w-[480px] md:p-8 dark:text-white">
           <Dialog.Title asChild>
-            <h1 className="text-lg font-bold">Add New Board</h1>
+            <h1 className="text-lg font-bold">Edit Board</h1>
           </Dialog.Title>
           <Dialog.Description className="hidden">
-            Add new board.
+            Edit board.
           </Dialog.Description>
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            {/* Board Name Input */}
+            {/* Board Name */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="boardName"
@@ -107,7 +106,7 @@ export function ModalNewBoard({
                 Board Columns
               </h2>
               <div className="flex flex-col gap-3">
-                {columns.map((column) => (
+                {editColumns.map((column) => (
                   <div key={column.id} className="flex items-center gap-4">
                     <input
                       required
@@ -131,12 +130,15 @@ export function ModalNewBoard({
                   </div>
                 ))}
                 <Button
+                  disabled={editColumns?.length >= 6}
                   variant="secundary"
                   size="sm"
                   type="button"
                   onClick={() => addColumn()}
                 >
-                  + Add New Column
+                  {editColumns?.length >= 6
+                    ? "Max 6 columns"
+                    : "+ Add New Column"}
                 </Button>
               </div>
             </div>
@@ -146,7 +148,11 @@ export function ModalNewBoard({
               variant="primary"
               size="sm"
             >
-              Create New Board
+              {isLoading ? (
+                <Ellipsis width={19.5} height={19.5} className="animate-ping" />
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </form>
         </div>

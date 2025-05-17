@@ -1,4 +1,3 @@
-import { fetchBoardById } from "app/services/boardService";
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {

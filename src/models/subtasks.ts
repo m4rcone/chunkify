@@ -1,8 +1,6 @@
 import database from "infra/database";
 import tasks from "./tasks";
-import { Result } from "postcss";
 import { NotFoundError } from "infra/errors";
-import { updateBoard } from "app/services/boardService";
 
 export type SubtaskObject = {
   id?: string;

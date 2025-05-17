@@ -90,6 +90,52 @@ describe("PATCH /api/v1/tasks/[id]", () => {
     expect(responseBody.updated_at > responseBody.created_at).toBe(true);
   });
 
+  test("With existent 'id' and only 'column_id'", async () => {
+    const createdBoard = await orchestrator.createBoard({
+      name: "Board Name",
+    });
+
+    const createdColumn1 = await orchestrator.createColumn(createdBoard.id, {
+      name: "Column Name",
+    });
+
+    const createdColumn2 = await orchestrator.createColumn(createdBoard.id, {
+      name: "Column Name",
+    });
+
+    const createdTask = await orchestrator.createTask(createdColumn1.id, {
+      title: "Task Title",
+      description: "Task description...",
+    });
+
+    const response = await fetch(
+      `http://localhost:3000/api/v1/tasks/${createdTask.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          column_id: createdColumn2.id,
+        }),
+      },
+    );
+    const responseBody = await response.json();
+
+    expect(response.status).toBe(200);
+
+    expect(responseBody).toEqual({
+      id: createdTask.id,
+      title: createdTask.title,
+      description: createdTask.description,
+      created_at: createdTask.created_at.toISOString(),
+      updated_at: responseBody.updated_at,
+      column_id: createdColumn2.id,
+    });
+
+    expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+  });
+
   test("With existent 'id' and valid data", async () => {
     const createdBoard = await orchestrator.createBoard({
       name: "Board Name",

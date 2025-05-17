@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { type Dispatch, type SetStateAction, useState } from "react";
-import { Eye, SquareKanban } from "lucide-react";
-import { BoardList } from "./board-list";
-import { DarkModeToggle } from "./dark-mode-toggle";
+import { Eye, Info, SquareKanban } from "lucide-react";
+import { BoardList } from "./boardList";
+import { DarkModeToggle } from "./darkModeToggle";
 import { Board } from "app/services/boardService";
 import * as Dialog from "@radix-ui/react-dialog";
-import { ModalNewBoard } from "../modals/modal-new-board";
+import { ModalNewBoard } from "../modals/modalNewBoard";
 
 export function DesktopNavigation({
   boards,
+  isLoading,
   isSidebarVisible,
   setIsSidebarVisible,
 }: {
   boards: Board[];
+  isLoading: boolean;
   isSidebarVisible: boolean;
   setIsSidebarVisible: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -56,30 +58,44 @@ export function DesktopNavigation({
             </div>
             <nav className="">
               {/* BoardList Component */}
-              <BoardList boards={boards} />
+              <BoardList boards={boards} isLoading={isLoading} />
               {/* Modal Create Board */}
-              <Dialog.Root
-                open={isCreateModalOpen}
-                onOpenChange={setIsCreateModalOpen}
-              >
-                <Dialog.Trigger asChild>
-                  <div className="text-main-purple hover:text-main-purple-hover max-w-[240px] cursor-pointer px-6 py-4 text-sm font-bold">
-                    <button className="flex cursor-pointer items-center gap-3">
-                      <SquareKanban
-                        width={20}
-                        height={20}
-                        className="shrink-0"
-                      />
-                      <span className="truncate">+ Create New Board</span>
-                    </button>
-                  </div>
-                </Dialog.Trigger>
-                {/* ModalBoard Component */}
-                <ModalNewBoard
+              {!isLoading && boards?.length < 5 ? (
+                <Dialog.Root
                   open={isCreateModalOpen}
                   onOpenChange={setIsCreateModalOpen}
-                />
-              </Dialog.Root>
+                >
+                  <Dialog.Trigger disabled={false} asChild>
+                    <div className="text-main-purple hover:text-main-purple-hover max-w-[240px] cursor-pointer px-6 py-4 text-sm font-bold">
+                      <button className="flex cursor-pointer items-center gap-3">
+                        <SquareKanban
+                          width={20}
+                          height={20}
+                          className="shrink-0"
+                        />
+                        <span className="truncate">+ Create New Board</span>
+                      </button>
+                    </div>
+                  </Dialog.Trigger>
+                  {/* ModalBoard Component */}
+                  <ModalNewBoard
+                    open={isCreateModalOpen}
+                    onOpenChange={setIsCreateModalOpen}
+                  />
+                </Dialog.Root>
+              ) : (
+                !isLoading && (
+                  <div className="text-main-purple hover:text-main-purple-hover max-w-[240px] cursor-not-allowed px-6 py-4 text-sm font-bold">
+                    <button
+                      disabled
+                      className="flex cursor-not-allowed items-center gap-3"
+                    >
+                      <Info width={20} height={20} className="shrink-0" />
+                      <span className="truncate">Max 5 boards</span>
+                    </button>
+                  </div>
+                )
+              )}
             </nav>
           </div>
           {/* Actions */}

@@ -11,6 +11,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Chunkify",
   description: "Transforme em pedaços!",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export const viewport: Viewport = {
@@ -27,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={plusJakartaSans.className}>
       <body>
-        <div className="bg-light-gray dark:bg-very-dark-gray flex h-screen w-screen flex-col md:flex-row">
+        <div className="bg-light-gray dark:bg-very-dark-gray flex h-svh w-screen flex-col md:h-screen md:flex-row">
           <Navigation />
           {children}
         </div>

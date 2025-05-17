@@ -1,12 +1,12 @@
 # Chunkify (em desenvolvimento)
 
-Transformar em pedaços! 
+Transformar em pedaços!
 
 Projeto de desenvolvimento de app no estilo `Kanban`.
 
 ## Objetivo
 
-Este projeto tem como principal objetivo consolidar os conhecimentos que venho adquirindo em desenvolvimento `Full-stack`. 
+Este projeto tem como principal objetivo consolidar os conhecimentos que venho adquirindo em desenvolvimento `Full-stack`.
 
 Além disso, busca a criação de um aplicativo funcional, com design atrativo e alinhado às boas práticas utilizadas no mercado, tanto no front-end quanto no back-end.
 
@@ -15,7 +15,8 @@ Além disso, busca a criação de um aplicativo funcional, com design atrativo e
 🔹 Next.js 🔹 React 🔹 Node.js 🔹 Typescript 🔹 Jest 🔹 PostgresSQL 🔹 Docker 🔹 Tailwindcss 🔸 [package.json](https://github.com/m4rcone/chunkify/blob/c44a6b55efbe84d5b23342dc703a27f1bd960421/package.json)
 
 ## Estrutura de pastas
-*Última atualização: 09/05/2025*
+
+_Última atualização: 09/05/2025_
 
 ```
 📂 public/
@@ -49,14 +50,16 @@ Além disso, busca a criação de um aplicativo funcional, com design atrativo e
                 ├── 📂 columns/
                     ├── 📂 [id]/
 ```
+
 ## Infraestrutura
-*Última atualização: 09/05/2025*
+
+_Última atualização: 09/05/2025_
 
 Na infraestrutura, estou utilizando `Docker` com banco de dados `PostgreSQL`. Para conectar ao banco, uso o módulo `pg`, e para as migrações, o `node-pg-migrate`.
 
 Optei por **não usar ORM**, pois quero praticar e escrever `SQL` manualmente. Criei três scripts para gerenciamento dos serviços, e aprimorei o script `dev` para garantir que os serviços estejam ativos antes de iniciar o servidor.
 
-Planejo, futuramente, incluir a execução das migrações também no script `dev`. 
+Planejo, futuramente, incluir a execução das migrações também no script `dev`.
 
 Scripts:
 
@@ -71,15 +74,17 @@ Scripts:
 
 Também criei 4 [erros customizados](https://github.com/m4rcone/chunkify/blob/c44a6b55efbe84d5b23342dc703a27f1bd960421/src/infra/errors.ts) e um [controller](https://github.com/m4rcone/chunkify/blob/c44a6b55efbe84d5b23342dc703a27f1bd960421/src/infra/controller.ts) para os mesmos.
 
-## Testes Automatizados 
-*Última atualização: 09/05/2025*
+## Testes Automatizados
 
-No back-end, utilizo `Jest` com uma abordagem baseada em orchestrator. Antes de cada teste *(beforeAll)*, o orchestrator limpa o banco e executa as migrações utilizando o [migrator](https://github.com/m4rcone/chunkify/blob/c44a6b55efbe84d5b23342dc703a27f1bd960421/src/models/migrator.ts), criado com a *API programática* do `node-pg-migrate`.
+_Última atualização: 09/05/2025_
+
+No back-end, utilizo `Jest` com uma abordagem baseada em orchestrator. Antes de cada teste _(beforeAll)_, o orchestrator limpa o banco e executa as migrações utilizando o [migrator](https://github.com/m4rcone/chunkify/blob/c44a6b55efbe84d5b23342dc703a27f1bd960421/src/models/migrator.ts), criado com a _API programática_ do `node-pg-migrate`.
 
 ## Back-end
-*Última atualização: 09/05/2025*
 
-Já estão finalizados os *models* `boards` e `columns`, com criação, atualização, exclusão e busca. Todos os endpoints contam com testes automatizados:
+_Última atualização: 09/05/2025_
+
+Já estão finalizados os _models_ `boards` e `columns`, com criação, atualização, exclusão e busca. Todos os endpoints contam com testes automatizados:
 
 - `GET / api/v1/boards` -> Buscar todos boards
 - `POST / api/v1/boards` -> Criar um board
@@ -92,10 +97,11 @@ Já estão finalizados os *models* `boards` e `columns`, com criação, atualiza
 - `PATCH / api/v1/columns/[id]` -> Atualizar uma column
 - `DELETE / api/v1/columns/[id]` -> Deletar uma column
 
-📌  Próximo passo: implementar os endpoints de `tasks` e `subtasks`.
+📌 Próximo passo: implementar os endpoints de `tasks` e `subtasks`.
 
 ## Front-end
-*Última atualização: 09/05/2025*
+
+_Última atualização: 09/05/2025_
 
 A `UI` de criação, edição e exclusão de `boards` e `columns` está finalizada, com layout responsivo e suporte a `dark mode` via hook personalizado.
 
@@ -119,7 +125,7 @@ npm run migrations:up
 
 ## Objetivos Futuros
 
-Pretendo implementar um sistema de autenticação com `JWT`, além de configurar ambientes de produção e homologação para consolidar meus conhecimentos em `CI/CD` utilizando `GitHub Actions`. 
+Pretendo implementar um sistema de autenticação com `JWT`, além de configurar ambientes de produção e homologação para consolidar meus conhecimentos em `CI/CD` utilizando `GitHub Actions`.
 
 E claro, colocar o app em um pedacinho da internet!
 

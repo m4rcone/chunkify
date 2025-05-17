@@ -2,11 +2,13 @@
 
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { MoreVertical } from "lucide-react";
-import { ModalDeleteBoard } from "app/components/modals/modal-delete-board";
-import { ModalEditBoard } from "app/components/modals/modal-edit-board";
+import { Ellipsis, MoreVertical } from "lucide-react";
+import { ModalDeleteBoard } from "app/components/modals/modalDeleteBoard";
+import { ModalEditBoard } from "app/components/modals/modalEditBoard";
 import { useBoard, useColumns } from "app/hooks/boards/useBoards";
 import * as Dialog from "@radix-ui/react-dialog";
+import { Button } from "app/components/ui/button";
+import { ModalNewTask } from "app/components/modals/modalNewTask";
 
 export default function BoardLayout({
   children,
@@ -16,6 +18,7 @@ export default function BoardLayout({
   const [isBoardOptionsOpen, setIsBoardOptionsOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState<boolean>(false);
 
   const params = useParams();
   const boardId = String(params.boardId);
@@ -28,16 +31,28 @@ export default function BoardLayout({
       <header className="dark:bg-dark-gray border-b-lines-light dark:border-b-lines-dark hidden w-[calc(100vw-260px)] border-b bg-white md:flex">
         <div className="flex w-full items-center justify-between p-[26px]">
           <h2 className="text-2xl font-bold dark:text-white">
-            {isLoading && "..."}
+            {isLoading && <Ellipsis className="animate-ping" />}
             {board && board?.name}
           </h2>
           <div className="flex items-center gap-6">
-            <button
-              disabled={true}
-              className="disabled:bg-main-purple-hover bg-main-purple hover:bg-main-purple-hover cursor-pointer rounded-3xl px-5 py-3.5 text-sm font-bold text-white"
-            >
-              + Add New Task
-            </button>
+            {/* Modal New Task */}
+            <Dialog.Root open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+              <Dialog.Trigger asChild>
+                <Button
+                  disabled={columns?.length === 0}
+                  size="lg"
+                  variant="primary"
+                >
+                  + Add New Task
+                </Button>
+              </Dialog.Trigger>
+              {/* Component */}
+              <ModalNewTask
+                open={isAddTaskOpen}
+                onOpenChange={setIsAddTaskOpen}
+                columns={columns}
+              />
+            </Dialog.Root>
             <button
               onClick={() => setIsBoardOptionsOpen(!isBoardOptionsOpen)}
               className="text-medium-gray cursor-pointer"
@@ -49,7 +64,7 @@ export default function BoardLayout({
 
         {/* Board Options */}
         <div
-          className={`${!isBoardOptionsOpen && "hidden"} dark:bg-dark-gray absolute top-[126px] right-[26px] flex w-[192px] flex-col gap-4 rounded-lg bg-white p-4 shadow-md`}
+          className={`${!isBoardOptionsOpen && "hidden"} dark:bg-dark-gray/90 absolute top-[70px] right-[38px] flex flex-col gap-4 rounded-lg bg-white/90 p-4 shadow-md`}
         >
           {/* Modal Edit Board */}
           <Dialog.Root open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
@@ -61,7 +76,7 @@ export default function BoardLayout({
                 Edit Board
               </button>
             </Dialog.Trigger>
-            {/* ModalEditBoard Component */}
+            {/* Component */}
             <ModalEditBoard
               board={board}
               columns={columns}
@@ -83,7 +98,7 @@ export default function BoardLayout({
                 Delete Board
               </button>
             </Dialog.Trigger>
-            {/* ModalDeleteBoard Component */}
+            {/* Component */}
             <ModalDeleteBoard
               board={board}
               onOpenChange={setIsDeleteModalOpen}
@@ -92,7 +107,7 @@ export default function BoardLayout({
         </div>
       </header>
 
-      <main className="h-[calc(100vh-64px)] overflow-hidden md:max-h-[calc(100vh-100px)] md:max-w-[calc(100vw-260px)]">
+      <main className="scrollbar-custom dark:scrollbar-custom-dark h-[calc(100svh-64px)] overflow-hidden md:max-h-[calc(100vh-100px)] md:max-w-[calc(100vw-260px)]">
         {children}
       </main>
     </div>

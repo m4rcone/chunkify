@@ -2,26 +2,37 @@ import Link from "next/link";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useParams } from "next/navigation";
-import { BoardList } from "./board-list";
-import { DarkModeToggle } from "./dark-mode-toggle";
+import { BoardList } from "./boardList";
+import { DarkModeToggle } from "./darkModeToggle";
 import { ChevronDown, MoreVertical, Plus, SquareKanban } from "lucide-react";
-import { Board } from "app/services/boardService";
-import { ModalNewBoard } from "../modals/modal-new-board";
-import { useState } from "react";
-import { ModalEditBoard } from "../modals/modal-edit-board";
+import { Board, Column } from "app/services/boardService";
+import { ModalNewBoard } from "../modals/modalNewBoard";
+import { useEffect, useState } from "react";
+import { ModalEditBoard } from "../modals/modalEditBoard";
 import { useColumns } from "app/hooks/boards/useBoards";
-import { ModalDeleteBoard } from "../modals/modal-delete-board";
+import { ModalDeleteBoard } from "../modals/modalDeleteBoard";
+import { ModalNewTask } from "../modals/modalNewTask";
 
 export function MobileNavigation({ boards }: { boards: Board[] }) {
   const [isBoardOptionsOpen, setIsBoardOptionsOpen] = useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState<boolean>(false);
+  const [boardColumns, setBoardColumns] = useState<Column[]>([]);
+
+  const boardsQtd = boards ? boards.length : 0;
 
   const params = useParams();
-  const boardId = String(params.boardId);
-  const boardsQtd = boards ? boards.length : 0;
-  const currentBoard = boards?.find((board) => board.id === boardId);
+  const boardId = params.boardId && String(params.boardId);
+  const currentBoard = boardId && boards?.find((board) => board.id === boardId);
+
   const { columns } = useColumns(boardId);
+
+  useEffect(() => {
+    if (boardId) {
+      setBoardColumns(columns);
+    }
+  }, [boardId, columns]);
 
   return (
     <header className="dark:bg-dark-gray border-b-lines-light dark:border-b-lines-dark w-full border-b bg-white md:hidden">
@@ -47,12 +58,22 @@ export function MobileNavigation({ boards }: { boards: Board[] }) {
         </div>
         {/* Actions */}
         <div className="flex items-center gap-4">
-          <button
-            disabled
-            className="bg-main-purple disabled:bg-main-purple-hover hover:bg-main-purple-hover cursor-pointer rounded-3xl px-3 py-1 text-white"
-          >
-            <Plus />
-          </button>
+          <Dialog.Root open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
+            <Dialog.Trigger asChild>
+              <button
+                disabled={!currentBoard || boardColumns?.length === 0}
+                className="bg-main-purple disabled:bg-main-purple-hover hover:bg-main-purple-hover cursor-pointer rounded-3xl px-3 py-1 text-white"
+              >
+                <Plus />
+              </button>
+            </Dialog.Trigger>
+            {/* ModalNewTask Component */}
+            <ModalNewTask
+              open={isAddTaskOpen}
+              onOpenChange={setIsAddTaskOpen}
+              columns={boardColumns}
+            />
+          </Dialog.Root>
           <button
             disabled={!currentBoard && true}
             onClick={() => setIsBoardOptionsOpen(!isBoardOptionsOpen)}
@@ -80,7 +101,7 @@ export function MobileNavigation({ boards }: { boards: Board[] }) {
           {/* ModalEditBoard Component */}
           <ModalEditBoard
             board={currentBoard}
-            columns={columns}
+            columns={boardColumns}
             open={isEditModalOpen}
             onOpenChange={setIsEditModalOpen}
           />

@@ -1,9 +1,10 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { Board } from "app/services/boardService";
 import { Button } from "../ui/button";
 import { useBoardActions } from "app/hooks/boards/useBoards";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { Ellipsis } from "lucide-react";
 
 export function ModalDeleteBoard({
   board,
@@ -16,21 +17,22 @@ export function ModalDeleteBoard({
   const { handleDeleteBoard } = useBoardActions();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleDelete = async () => {
+  async function handleDelete() {
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
       await handleDeleteBoard(board.id);
       setIsLoading(false);
-
       onOpenChange(false);
 
       router.push("/");
     } catch (error) {
       alert("🔴 Error deleting board.");
       console.error(error);
+    } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <Dialog.Portal>
@@ -52,7 +54,11 @@ export function ModalDeleteBoard({
               size="sm"
               variant="destructive"
             >
-              Delete
+              {isLoading ? (
+                <Ellipsis width={19.5} height={19.5} className="animate-ping" />
+              ) : (
+                "Delete"
+              )}
             </Button>
             <Dialog.Trigger asChild>
               <Button size="sm" variant="secundary">

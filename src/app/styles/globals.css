@@ -23,3 +23,10 @@
     @apply focus:outline-none;
   }
 }
+
+@layer utilities {
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: theme(--color-main-purple) transparent;
+  }
+}

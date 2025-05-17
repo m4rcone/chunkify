@@ -49,13 +49,19 @@ async function update(taskId: string, taskInputValues: TaskObject) {
         SET
           title = $1,
           description = $2,
+          column_id = $3,
           updated_at = timezone('UTC', now())
         WHERE
-          id = $3
+          id = $4
         RETURNING
           *
       `,
-      values: [taskWithNewValues.title, taskWithNewValues.description, taskId],
+      values: [
+        taskWithNewValues.title,
+        taskWithNewValues.description,
+        taskWithNewValues.column_id,
+        taskId,
+      ],
     });
 
     return result.rows[0];
@@ -95,7 +101,7 @@ async function getTasksByColumnId(columnId: string) {
         WHERE
           column_id = $1
         ORDER BY
-          created_at
+          updated_at
       `,
       values: [columnId],
     });

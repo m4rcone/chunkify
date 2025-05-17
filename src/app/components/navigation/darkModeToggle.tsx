@@ -1,4 +1,4 @@
-import { useTheme } from "app/hooks/use-theme";
+import { useTheme } from "app/hooks/useTheme";
 import { Moon, Sun } from "lucide-react";
 
 export function DarkModeToggle() {

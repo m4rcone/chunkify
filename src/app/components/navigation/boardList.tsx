@@ -1,14 +1,16 @@
 import { Board } from "app/services/boardService";
-import { SquareKanban } from "lucide-react";
+import { Ellipsis, SquareKanban } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { type Dispatch, type SetStateAction } from "react";
 
 export function BoardList({
   boards,
+  isLoading,
   setIsMenuOpen,
 }: {
   boards: Board[];
+  isLoading?: boolean;
   setIsMenuOpen?: Dispatch<SetStateAction<boolean>>;
 }) {
   const params = useParams();
@@ -16,6 +18,11 @@ export function BoardList({
 
   return (
     <ul className="ml-[-1rem] flex flex-col md:ml-0">
+      {isLoading && (
+        <li className="flex justify-center">
+          <Ellipsis className="text-medium-gray animate-ping" />
+        </li>
+      )}
       {boards?.map((board) => (
         <li key={board.id}>
           <Link
