@@ -28,6 +28,10 @@ _Última atualização: 09/05/2025_
 │   │   │   │   ├── 📂 [id]/
 │   │   │   ├── 📂 columns/
 │   │   │   │   ├── 📂 [id]/
+│   │   │   ├── 📂 subtasks/
+│   │   │   │   ├── 📂 [id]/
+│   │   │   ├── 📂 tasks/
+│   │   │   │   ├── 📂 [id]/
 │   ├── 📂 boards/
 │   │   ├── 📂 [boardId]/
 │   ├── 📂 components/
@@ -36,6 +40,7 @@ _Última atualização: 09/05/2025_
 │   │   ├── 📂 ui/
 │   ├── 📂 hooks/
 │   │   ├── 📂 boards/
+|   |   ├── 📂 tasks/
 │   ├── 📂 services/
 │   ├── 📂 styles/
 ├── 📂 infra/
@@ -48,6 +53,10 @@ _Última atualização: 09/05/2025_
                 ├── 📂 boards/
                 │   ├── 📂 [id]/
                 ├── 📂 columns/
+                |    ├── 📂 [id]/
+                ├── 📂 subtasks/
+                │   ├── 📂 [id]/
+                ├── 📂 tasks/
                     ├── 📂 [id]/
 ```
 
@@ -59,7 +68,7 @@ Na infraestrutura, estou utilizando `Docker` com banco de dados `PostgreSQL`. Pa
 
 Optei por **não usar ORM**, pois quero praticar e escrever `SQL` manualmente. Criei três scripts para gerenciamento dos serviços, e aprimorei o script `dev` para garantir que os serviços estejam ativos antes de iniciar o servidor.
 
-Planejo, futuramente, incluir a execução das migrações também no script `dev`.
+Planejo, futuramente, incluir a execução das migrations também no script `dev`.
 
 Scripts:
 
