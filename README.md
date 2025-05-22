@@ -1,3 +1,5 @@
+# Chunkify - em desenvolvimento...
+
 Transformar em pedaços!
 
 Projeto de desenvolvimento de app no estilo `Kanban`.
