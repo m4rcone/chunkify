@@ -1,5 +1,3 @@
-![delete-board](https://github.com/user-attachments/assets/183d817d-e3dc-4fcd-9b47-d9cd747f1400)# Chunkify (em desenvolvimento)
-
 Transformar em pedaços!
 
 Projeto de desenvolvimento de app no estilo `Kanban`.
