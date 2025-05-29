@@ -10,8 +10,8 @@ import {
 function errorHandlerResponse(error: Error | any) {
   if (
     error instanceof MethodNotAllowedError ||
-    ValidationError ||
-    NotFoundError
+    error instanceof ValidationError ||
+    error instanceof NotFoundError
   ) {
     return NextResponse.json(error, { status: error.statusCode });
   }
