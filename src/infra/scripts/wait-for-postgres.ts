@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { exec } = require("node:child_process");
 
 process.stdout.write("\n🔴 Aguardando o postgres aceitar conexões.");
