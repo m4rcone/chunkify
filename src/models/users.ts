@@ -1,5 +1,5 @@
 import database from "infra/database";
-import { NotFoundError, ValidationError } from "infra/errors";
+import { ValidationError } from "infra/errors";
 import password from "./password";
 
 type UserInputValues = {
@@ -38,36 +38,36 @@ async function create(userInputValues: UserInputValues) {
   }
 }
 
-async function findOneByUsername(username: string) {
-  const userFound = await runSelectQuery(username);
+// async function findOneByUsername(username: string) {
+//   const userFound = await runSelectQuery(username);
 
-  return userFound;
+//   return userFound;
 
-  async function runSelectQuery(username: string) {
-    const result = await database.query({
-      text: `
-        SELECT
-          *
-        FROM
-          users
-        WHERE
-          username = $1
-        LIMIT
-          1
-      `,
-      values: [username],
-    });
+//   async function runSelectQuery(username: string) {
+//     const result = await database.query({
+//       text: `
+//         SELECT
+//           *
+//         FROM
+//           users
+//         WHERE
+//           username = $1
+//         LIMIT
+//           1
+//       `,
+//       values: [username],
+//     });
 
-    if (result.rowCount < 0) {
-      throw new NotFoundError({
-        message: "O username informado não foi encontrado no sistema.",
-        action: "Verifique o username informado e tente novamente.",
-      });
-    }
+//     if (result.rowCount < 0) {
+//       throw new NotFoundError({
+//         message: "O username informado não foi encontrado no sistema.",
+//         action: "Verifique o username informado e tente novamente.",
+//       });
+//     }
 
-    return result.rows[0];
-  }
-}
+//     return result.rows[0];
+//   }
+// }
 
 async function validateUniqueUsername(username: string) {
   const result = await database.query({
