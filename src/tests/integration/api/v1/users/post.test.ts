@@ -1,3 +1,4 @@
+import password from "models/password";
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 
@@ -37,6 +38,18 @@ describe("POST /api/v1/users", () => {
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+      const correctPassword = await password.compare(
+        "senhasegura",
+        responseBody.password,
+      );
+      const incorrectPassword = await password.compare(
+        "senhaincorreta",
+        responseBody.password,
+      );
+
+      expect(correctPassword).toBe(true);
+      expect(incorrectPassword).toBe(false);
     });
 
     test("With duplicated `username`", async () => {
